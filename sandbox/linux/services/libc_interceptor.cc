@@ -218,6 +218,11 @@ void ProxyLocaltimeCallToBrowser(time_t input,
 bool HandleLocalTime(int fd,
                      base::PickleIterator iter,
                      const std::vector<base::ScopedFD>& fds) {
+  if (fds.size() != 1) {
+    LOG(ERROR) << "HandleLocalTime received invalid number of FDs.";
+    return false;
+  }
+  
   std::string time_string;
   if (!iter.ReadString(&time_string) || time_string.size() != sizeof(time_t))
     return false;
